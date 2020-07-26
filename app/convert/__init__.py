@@ -28,9 +28,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             url = req_body.get('url')
 
     if url:
-        return func.HttpResponse(f"Hello, {url}. This HTTP triggered function executed successfully.")
+        convert_html_to_md(url)
+        return func.HttpResponse(f"You submitted, {url}. This HTTP triggered function executed successfully.")
     else:
         return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
+             "This HTTP triggered function executed successfully. Pass a url in the query string or in the request body for a personalized response.",
              status_code=200
         )
