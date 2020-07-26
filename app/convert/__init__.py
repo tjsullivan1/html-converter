@@ -1,4 +1,7 @@
 import logging
+import requests
+import pypandoc
+from readability import Document
 
 import azure.functions as func
 
@@ -6,19 +9,28 @@ import azure.functions as func
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-    name = req.params.get('name')
-    if not name:
+    url = req.params.get('url')
+    if not url:
         try:
             req_body = req.get_json()
         except ValueError:
             pass
         else:
-            name = req_body.get('name')
+            url = req_body.get('url')
 
-    if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
+    if url:
+        return func.HttpResponse(f"Hello, {url}. This HTTP triggered function executed successfully.")
     else:
         return func.HttpResponse(
              "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
              status_code=200
         )
+
+
+def convert_html_to_md(url):
+    response = requests.get(url)
+    doc = Document(response.text)
+
+    html = doc.summary()
+
+    return pypandoc.convert_text(html, 'md', format='html')
