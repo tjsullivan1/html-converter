@@ -43,3 +43,42 @@ jobs:
     - name: Terraform Apply
       if: github.ref == 'refs/heads/master' && github.event_name == 'push'
       run: terraform apply -auto-approve
+
+  python:
+    name: 'Deploy Python App'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app/
+    env:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      AZURE_FUNCTIONAPP_NAME: 'azfun-htmlconv-d' # set this to your application's name
+      AZURE_FUNCTIONAPP_PACKAGE_PATH: 'app/'   # set this to the path to your web app project, defaults to the repository root
+      PYTHON_VERSION: '3.7'                 # set this to the python version to use (supports 3.6, 3.7, 3.8)
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    
+    - name: Setup Python ${{ env.PYTHON_VERSION }} Environment
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: 'Resolve Project Dependencies Using Pip'
+      shell: bash
+      run: |
+        pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt --target=".python_packages/lib/site-packages"
+        popd
+        
+    - name: 'Run Azure Functions Action'
+      uses: Azure/functions-action@v1
+      id: fa
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+        package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        publish-profile: ${{ secrets.AZURE_FUNCTIONAPP_PUBLISH_PROFILE }}
