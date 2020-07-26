@@ -1,3 +1,4 @@
+azure-functions
 requests
 pypandoc
 readability-lxml
