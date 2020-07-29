@@ -1,4 +1,4 @@
 azure-functions
-requests==2.23.0
+requests
 pypandoc
 readability-lxml
