@@ -1,7 +1,7 @@
 import logging
 # import requests
-import pypandoc
-from readability import Document
+# import pypandoc
+# from readability import Document
 
 import azure.functions as func
 
