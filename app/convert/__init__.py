@@ -1,4 +1,4 @@
-# import logging
+import logging
 # import requests
 # import pypandoc
 # from readability import Document
