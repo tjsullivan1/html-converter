@@ -15,7 +15,7 @@ provider "azurerm" {
 }
 
 module "webserver" {
-  source = "git::https://github.com/tjsullivan1/terraforming.git//modules/services/az-function?ref=v0.3.0"
+  source = "git::https://github.com/tjsullivan1/terraforming.git//modules/services/az-function?ref=v0.2.0"
 
   env                 = "d"
   name                = "htmlconv"
