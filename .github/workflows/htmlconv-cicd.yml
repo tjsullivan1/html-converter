@@ -47,9 +47,6 @@ jobs:
   python:
     name: 'Deploy Python App'
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: app/
     needs: terraform
     env:
       ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
