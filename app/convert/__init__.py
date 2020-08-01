@@ -1,9 +1,9 @@
-import logging
-import requests
-import pypandoc
-from readability import Document
+# import requests
+# import pypandoc
+# from readability import Document
 
 import azure.functions as func
+import logging
 
 
 # def convert_html_to_md(url):
